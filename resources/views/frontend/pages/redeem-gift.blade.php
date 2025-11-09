@@ -93,6 +93,82 @@
             }
 
         }
+
+        .glass-container {
+            position: relative;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            margin: 0 auto;
+            padding: 20px 0;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            width: auto;
+            height: auto;
+        }
+        
+        .section_draw {
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .glass-container img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .glass-container.clicked::after {
+            content: '✕';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: #ff0000;
+            font-weight: bold;
+            z-index: 1001;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+        }
+
+        .glass-container.clicked img {
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        @media only screen and (max-width: 750px) {
+            .glass-container {
+                bottom: 15px;
+                padding: 15px 0;
+            }
+            .glass-container img {
+                max-width: 80px;
+            }
+        }
+        
+        @media only screen and (max-width: 480px) {
+            .glass-container {
+                bottom: 10px;
+                padding: 10px 0;
+            }
+            .glass-container img {
+                max-width: 60px;
+            }
+        }
+        
+        @media only screen and (min-width: 1200px) {
+            .glass-container {
+                bottom: 30px;
+                padding: 30px 0;
+            }
+            .glass-container img {
+                max-width: 120px;
+            }
+        }
     </style>
     @if ($registration->status == true)
         <style>
@@ -138,6 +214,9 @@
 
                     </div>
                 </div>
+            </div>
+            <div class="glass-container" id="glass-container">
+                <img src="{{ asset('assets/frontend/images/glass.png') }}" alt="Drink Glass" id="glass-image">
             </div>
         </div>
     </Section>
@@ -209,6 +288,17 @@
                     inputs[key - 1].focus();
                 }
             });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const glassContainer = document.getElementById('glass-container');
+            
+            if (glassContainer) {
+                glassContainer.addEventListener('click', function() {
+                    this.classList.toggle('clicked');
+                });
+            }
         });
     </script>
 
