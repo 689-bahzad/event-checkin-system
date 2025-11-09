@@ -1,0 +1,232 @@
+
+
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+/* font family */
+/* @import url(\'https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap\'); */
+
+body {
+    font-family: \'Open Sans\', sans-serif !important;
+    /* background-color: black; */
+}
+
+/* css index page */
+.section_book_event {
+    background-color: black;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.section_book_event .wrapper {
+    max-width: 600px;
+    margin: auto;
+}
+
+.section_book_event form {
+    top: 43%;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+    max-width: 50%;
+}
+
+.section_book_event form input {
+    border-radius: 30px;
+}
+
+.submit_event button {
+    background-color: #83c0ef;
+    padding: 0px 15px 0px 15px;
+}
+
+
+.reg_bg {
+    text-align: center;
+    margin: auto;
+    max-width: 600px;
+}
+
+.sec_register {
+    background-color: black;
+}
+
+.reg_bg img {
+    width: 100%;
+    height: fit-content;
+}
+
+.draw_number {
+    max-width: 164px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 50.2%;
+    border-radius: 30px;
+    padding: 0px 5px;
+    text-align: center;
+    height: 6%;
+    max-width: 54.7%;
+}
+
+.reg_bg .btn {
+    left: 0;
+    background: #3609cc;
+    right: 0;
+    width: 255px;
+    margin: auto;
+    top: 49.2%;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 30px;
+    color: white;
+}
+.reg_bg .btn-1 {
+    left: 0;
+    background: #af1d22;;
+    right: 0;
+    width: 255px;
+    margin: auto;
+    top: 58.5%;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 30px;
+    color: white;
+}
+
+/* media query */
+
+@media(min-width:1024px) {
+    .section_book_event form .col-md-12 {
+        margin-top: 2rem;
+    }
+
+    .submit_event {
+        margin-top: 1rem !important;
+    }
+}
+
+@media(max-width:1024px) {
+    .section_book_event form {
+        top: 39%;
+    }
+
+   
+
+    .section_book_event .col-md-12 {
+        padding-top: 25px;
+        padding-bottom: 1px;
+    }
+    
+}
+
+@media(max-width:768px) {
+    .draw_number {
+        /* top: 35.92%;
+    max-width: 56%;
+    height: 5%; */
+    }
+
+    .section_book_event form {
+        top: 42%;
+    }
+
+    .my-form svg {
+       width: 300px !important;
+    }
+
+    .section_book_event .col-md-12 {
+        padding-top: 25px;
+        padding-bottom: 1px;
+    }
+}
+
+@media(max-width:512px) {
+    .section_book_event .wrapper{
+        /* margin-top: 10px !important; */
+        height: 100vh;
+    }
+    .section_book_event .wrapper img {
+        width: 100% !important;
+        height: -webkit-fill-available !important;
+    }
+    .my-form svg {
+        width: 215px !important;
+    }
+    .section_book_event form {
+        top: 40%;
+    }
+
+    .reg_bg .btn {
+        max-width: 208px;
+        font-size: 13px;
+    }
+    .reg_bg .btn-1 {
+        max-width: 208px;
+        font-size: 13px;
+    }
+
+    .section_book_event .form-control {
+        padding: 0px 3px 0px 6px;
+        font-size: 14px;
+    }
+
+    .section_book_event .form-label {
+        margin: 0px;
+    }
+
+    .reg_bg{
+        height: 100vh;
+        /* margin-top: 10px !important; */
+    }
+    .reg_bg .img1{
+        width: 100% !important;
+        height: -webkit-fill-available !important;
+    }
+    
+}
+
+
+@media(max-width:388px) {
+    .draw_number {
+        /* top: 35.9%;
+    max-width: 56%;
+    height: 5%; */
+    }
+
+    .my-form svg {
+        width: 195px !important;
+    }
+    /* .section_book_event form {
+        top: 40%;
+    } */
+    
+}
+
+@media(max-width:330px) {
+    .my-form svg {
+        width: 180px !important;
+    }
+
+}
+
+@media(max-width:218px) {
+    .draw_number {
+        /* top: 35.9%;
+    max-width: 56%;
+    height: 5%; */
+    }
+    .my-form svg {
+        width: 175px !important;
+    }
+
+    .my-form svg {
+        width: 205px !important;
+    }
+    .section_book_event form {
+        top: 40%;
+    }
+}
