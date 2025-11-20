@@ -50,7 +50,8 @@
         }
 
         .wrapper_box {
-            margin-top: 220px
+            margin-top: 220px;
+            margin-bottom: 0;
         }
 
         .box_border_redeem {
@@ -67,6 +68,7 @@
             margin: auto;
             text-align: center;
             border-color: #C2832D;
+            z-index: 10;
         }
         .box_border_redeemed {
             border-width: 7px;
@@ -82,6 +84,7 @@
             margin: auto;
             text-align: center;
             border-color: #C2832D;
+            z-index: 10;
         }
 
         @media only screen and (max-width: 750px) {
@@ -94,24 +97,49 @@
 
         }
 
+        .glass-container-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding: 20px 0;
+            width: 100%;
+            clear: both;
+        }
+
         .glass-container {
             position: relative;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
             text-align: center;
-            margin: 0 auto;
-            padding: 20px 0;
             cursor: pointer;
             z-index: 1000;
             transition: all 0.3s ease;
             width: auto;
             height: auto;
         }
+
+        .glass-container.redeem-drink {
+            position: relative;
+        }
         
         .section_draw {
             padding-bottom: 0;
             margin-bottom: 0;
+        }
+
+        .section_draw .container {
+            position: relative;
+        }
+
+        .drink-status {
+            text-align: center;
+            color: #fff;
+            margin-top: 10px;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            min-height: 20px;
         }
 
         .glass-container img {
@@ -141,28 +169,50 @@
         }
 
         @media only screen and (max-width: 750px) {
-            .glass-container {
-                bottom: 15px;
+            .glass-container-wrapper {
+                gap: 20px;
                 padding: 15px 0;
+                margin-top: 15px;
             }
             .glass-container img {
                 max-width: 80px;
             }
+            .drink-redemption-info {
+                font-size: 12px;
+                margin-top: 8px;
+            }
+            .wrapper_box {
+                margin-top: 180px;
+            }
         }
         
         @media only screen and (max-width: 480px) {
-            .glass-container {
-                bottom: 10px;
+            .glass-container-wrapper {
+                gap: 15px;
+                /* flex-direction: column; */
                 padding: 10px 0;
+                margin-top: 10px;
             }
             .glass-container img {
                 max-width: 60px;
             }
+            .drink-redemption-info {
+                font-size: 11px;
+                margin-top: 5px;
+            }
+            .wrapper_box {
+                margin-top: 150px;
+            }
+            .box_border_redeem,
+            .box_border_redeemed {
+                width: 95%;
+                padding: 8px 12px;
+            }
         }
         
         @media only screen and (min-width: 1200px) {
-            .glass-container {
-                bottom: 30px;
+            .glass-container-wrapper {
+                gap: 40px;
                 padding: 30px 0;
             }
             .glass-container img {
@@ -215,11 +265,48 @@
                     </div>
                 </div>
             </div>
-            <div class="glass-container" id="glass-container">
-                <img src="{{ asset('assets/frontend/images/glass.png') }}" alt="Drink Glass" id="glass-image">
+            @php
+                $canRedeem = isset($registration->can_redeem_drinks) ? (bool)$registration->can_redeem_drinks : false;
+                $drinksRedeemed = isset($registration->drinks_redeemed) ? (int)$registration->drinks_redeemed : 0;
+            @endphp
+            @if($canRedeem)
+            <div class="glass-container-wrapper">
+                <div class="glass-container redeem-drink" id="glass-container-1" data-glass-number="1">
+                    <img src="{{ asset('assets/frontend/images/glass.png') }}" alt="Drink Glass" id="glass-image-1" 
+                         data-registration-id="{{ $registration->id }}"
+                         data-drinks-redeemed="{{ $drinksRedeemed }}">
+                </div>
+                <div class="glass-container redeem-drink" id="glass-container-2" data-glass-number="2">
+                    <img src="{{ asset('assets/frontend/images/glass.png') }}" alt="Redeem Drink" id="glass-image-2" 
+                         data-registration-id="{{ $registration->id }}"
+                         data-drinks-redeemed="{{ $drinksRedeemed }}">
+                </div>
             </div>
+            @endif
         </div>
     </Section>
+
+    <!-- Drink Redemption Confirmation Modal -->
+    @if($canRedeem)
+    <div class="modal fade" id="drinkRedemptionModal" tabindex="-1" aria-labelledby="drinkRedemptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="drinkRedemptionModalLabel">Confirm Drink Redemption</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to redeem this drink?</p>
+                    <p class="text-muted">You have redeemed <span id="modal-drinks-count">{{ $drinksRedeemed }}</span> out of 2 drinks.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmDrinkRedemption">Yes, Redeem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 @endsection
 @section('js')
     <script>
@@ -292,11 +379,148 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const glassContainer = document.getElementById('glass-container');
+            // Drink redemption functionality for both glasses
+            const glass1 = document.getElementById('glass-image-1');
+            const glass2 = document.getElementById('glass-image-2');
+            const glassContainer1 = document.getElementById('glass-container-1');
+            const glassContainer2 = document.getElementById('glass-container-2');
+            const confirmDrinkRedemptionBtn = document.getElementById('confirmDrinkRedemption');
             
-            if (glassContainer) {
-                glassContainer.addEventListener('click', function() {
-                    this.classList.toggle('clicked');
+            let registrationId = null;
+            let drinksRedeemed = 0;
+            let currentGlassNumber = null;
+            
+            // Initialize from either glass
+            if (glass1) {
+                registrationId = glass1.getAttribute('data-registration-id');
+                drinksRedeemed = parseInt(glass1.getAttribute('data-drinks-redeemed')) || 0;
+            } else if (glass2) {
+                registrationId = glass2.getAttribute('data-registration-id');
+                drinksRedeemed = parseInt(glass2.getAttribute('data-drinks-redeemed')) || 0;
+            }
+
+            // Update initial status display - grey out glasses based on redemption count
+            function updateStatusDisplay() {
+                if (drinksRedeemed >= 1) {
+                    // First glass greyed out
+                    if (glassContainer1) {
+                        glassContainer1.classList.add('clicked');
+                        glassContainer1.style.cursor = 'not-allowed';
+                    }
+                }
+                if (drinksRedeemed >= 2) {
+                    // Both glasses greyed out
+                    if (glassContainer1) {
+                        glassContainer1.classList.add('clicked');
+                        glassContainer1.style.cursor = 'not-allowed';
+                    }
+                    if (glassContainer2) {
+                        glassContainer2.classList.add('clicked');
+                        glassContainer2.style.cursor = 'not-allowed';
+                    }
+                }
+            }
+
+            // Initialize status on page load
+            updateStatusDisplay();
+
+            // Function to handle glass click
+            function handleGlassClick(glassNumber) {
+                if (drinksRedeemed >= 2) {
+                    toastr.warning('You have already redeemed the maximum number of drinks (2).');
+                    return;
+                }
+
+                currentGlassNumber = glassNumber;
+                
+                // Update modal text
+                document.getElementById('modal-drinks-count').textContent = drinksRedeemed;
+                
+                // Show confirmation modal (Bootstrap 5)
+                const modal = new bootstrap.Modal(document.getElementById('drinkRedemptionModal'));
+                modal.show();
+            }
+
+            // Add click listeners to both glasses
+            if (glass1) {
+                glass1.addEventListener('click', function() {
+                    handleGlassClick(1);
+                });
+            }
+
+            if (glass2) {
+                glass2.addEventListener('click', function() {
+                    handleGlassClick(2);
+                });
+            }
+
+            // Handle confirmation button
+            if (confirmDrinkRedemptionBtn) {
+                confirmDrinkRedemptionBtn.addEventListener('click', function() {
+                    if (drinksRedeemed >= 2) {
+                        toastr.warning('You have already redeemed the maximum number of drinks (2).');
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('drinkRedemptionModal'));
+                        if (modal) modal.hide();
+                        return;
+                    }
+
+                    // Disable button during request
+                    confirmDrinkRedemptionBtn.disabled = true;
+                    confirmDrinkRedemptionBtn.textContent = 'Processing...';
+
+                    // Make AJAX call to redeem drink
+                    fetch(`/redeem-drink/${registrationId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            drinksRedeemed = data.drinks_redeemed;
+                            
+                            // Update data attributes
+                            if (glass1) glass1.setAttribute('data-drinks-redeemed', drinksRedeemed);
+                            if (glass2) glass2.setAttribute('data-drinks-redeemed', drinksRedeemed);
+                            
+                            // Update visual status - grey out glasses
+                            if (drinksRedeemed === 1) {
+                                // First glass greyed out with X
+                                if (glassContainer1) {
+                                    glassContainer1.classList.add('clicked');
+                                    glassContainer1.style.cursor = 'not-allowed';
+                                }
+                            } else if (drinksRedeemed === 2) {
+                                // Both glasses greyed out with X
+                                if (glassContainer1) {
+                                    glassContainer1.classList.add('clicked');
+                                    glassContainer1.style.cursor = 'not-allowed';
+                                }
+                                if (glassContainer2) {
+                                    glassContainer2.classList.add('clicked');
+                                    glassContainer2.style.cursor = 'not-allowed';
+                                }
+                            }
+                            
+                            toastr.success(data.message);
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('drinkRedemptionModal'));
+                            if (modal) modal.hide();
+                        } else {
+                            toastr.error(data.message || 'Failed to redeem drink');
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('drinkRedemptionModal'));
+                            if (modal) modal.hide();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        toastr.error('An error occurred while redeeming the drink');
+                    })
+                    .finally(() => {
+                        confirmDrinkRedemptionBtn.disabled = false;
+                        confirmDrinkRedemptionBtn.textContent = 'Yes, Redeem';
+                    });
                 });
             }
         });

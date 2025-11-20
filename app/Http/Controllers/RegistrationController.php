@@ -230,6 +230,39 @@ class RegistrationController extends Controller
         return response()->json(['valid' => $isValid]);
     }
 
+    /**
+     * Handle drink redemption
+     */
+    public function redeemDrink(Request $request, Registration $registration)
+    {
+        // Check if user has permission to redeem drinks
+        if (!$registration->can_redeem_drinks) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not allowed to redeem drinks.'
+            ], 403);
+        }
+
+        // Check if user has already redeemed maximum drinks (2)
+        if ($registration->drinks_redeemed >= 2) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already redeemed the maximum number of drinks (2).'
+            ], 400);
+        }
+
+        // Increment drinks redeemed
+        $registration->drinks_redeemed += 1;
+        $registration->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Drink redeemed successfully!',
+            'drinks_redeemed' => $registration->drinks_redeemed,
+            'remaining' => 2 - $registration->drinks_redeemed
+        ]);
+    }
+
 
     public function showLuckyDraw()
     {

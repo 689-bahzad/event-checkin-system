@@ -166,4 +166,24 @@ class RegisterUserController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Toggle drink redemption permission for a registration
+     */
+    public function toggleDrinkPermission(Request $request)
+    {
+        $request->validate([
+            'registration_id' => 'required|exists:registrations,id',
+            'can_redeem' => 'required|boolean'
+        ]);
+
+        $registration = Registration::findOrFail($request->registration_id);
+        $registration->can_redeem_drinks = $request->can_redeem;
+        $registration->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $request->can_redeem ? 'Drink redemption enabled' : 'Drink redemption disabled'
+        ]);
+    }
 }

@@ -81,7 +81,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
 
     Route::post('/register-users/import', [RegisterUserController::class, 'import'])->name('admin.register.users.import');
 
+    Route::get('/drink-redemption', [\App\Http\Controllers\Admin\DrinkRedemptionController::class, 'index'])->name('admin.drink.redemption');
+    Route::post('/drink-redemption/toggle', [\App\Http\Controllers\Admin\DrinkRedemptionController::class, 'togglePermission'])->name('admin.drink.redemption.toggle');
+
 });
+
+Route::post('/redeem-drink/{registration}', [RegistrationController::class, 'redeemDrink'])->name('redeem.drink');
 Route::group(['prefix' => 'd3v-te$t', 'as' => 'd3vte$t.', 'middleware' => ['auth']], function () {
    Route::get('admin/cache-clear', function () {
     \Illuminate\Support\Facades\Artisan::call('cache:clear');

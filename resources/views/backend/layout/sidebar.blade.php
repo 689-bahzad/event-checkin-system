@@ -29,17 +29,23 @@
 
      <!-- Nav Item - Pages Collapse Menu -->
      @if (Auth::user()->role == 'admin')
-         <li class="nav-item {{ request()->is('admin/register-users') ? 'active' : '' }}">
-             <a class="nav-link" href="{{ route('admin.register.users') }}">
-                 <i class="fas fa-fw fa-users"></i>
-                 <span>Register Users</span></a>
-         </li>
+        <li class="nav-item {{ request()->is('admin/register-users') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.register.users') }}">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Register Users</span></a>
+        </li>
 
-         <li class="nav-item {{ request()->is('admin/all-feedback') ? 'active' : '' }}">
-             <a class="nav-link" href="{{ route('all.feedback') }}">
-                 <i class="fas  fa-fw fa-comments"></i>
-                 <span>All Feedback</span></a>
-         </li>
+        <li class="nav-item {{ request()->is('admin/drink-redemption') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.drink.redemption') }}">
+                <i class="fas fa-fw fa-wine-glass"></i>
+                <span>Drink Redemption</span></a>
+        </li>
+
+        <li class="nav-item {{ request()->is('admin/all-feedback') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('all.feedback') }}">
+                <i class="fas  fa-fw fa-comments"></i>
+                <span>All Feedback</span></a>
+        </li>
 
          
          <li class="nav-item {{ request()->is('admin/sitting-table') ? 'active' : '' }}">

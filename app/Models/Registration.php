@@ -23,7 +23,9 @@ class Registration extends Model
         'qr_status',
         'qr_code_path',
         'is_check_out',
-        'is_email_sent'
+        'is_email_sent',
+        'can_redeem_drinks',
+        'drinks_redeemed'
     ];
 
     public function sittingTable()

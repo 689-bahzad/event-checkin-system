@@ -259,6 +259,7 @@ $('#importForm').on('submit', function(e) {
     $('#importSubmit').prop('disabled', false);
     $('#importLoading').hide();
   });
+
 });
 </script>
 @endsection
